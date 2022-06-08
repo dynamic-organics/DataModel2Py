@@ -1,4 +1,3 @@
-from neomodel import config, StructuredNode, ArrayProperty, StringProperty, IntegerProperty, UniqueIdProperty, RelationshipTo
 from reprlib import repr as limitedRepr
 {% macro get_type(prop, sub=True, relativeTo=None) %}{{ python_type(sub and prop.definition.item_type or prop.definition or None, relative_to=relativeTo)}}
 {%- endmacro %}
@@ -23,7 +22,7 @@ from typing import List
 {% endif %}
 
 {% macro generate_class(model) %}
-class {{model.python_type_name}}{% if model.type == "enum" %}(enum.Enum){% elif model.extends %}({{ model.extends.full_name_python_path()}})(){% else %}(StructuredNode){% endif %}:
+class {{model.python_type_name}}{% if model.type == "enum" %}(enum.Enum){% endif %}{% if model.extends %}({{ model.extends.full_name_python_path()}}){% endif %}:
 {% if model.comment %}
     """
     {{ model.comment | indent(4) }}
@@ -41,18 +40,6 @@ class {{model.python_type_name}}{% if model.type == "enum" %}(enum.Enum){% elif 
 {% for name, value in model.values.items() %}
     {{name}} = {% if model.value_type.type == "string" %}"{{value}}"{% else %}{{value}}{% endif %}
 
-{% endfor %}
-{% endif %}
-
-{% if model.properties %}
-{% for prop in model.properties %}
-{% if python_type(prop.definition or None, relative_to=model) == 'str' %}
-    {{prop.name}} = StringProperty()
-{% elif python_type(prop.definition or None, relative_to=model) == 'list' %}
-    {{prop.name}} = ArrayProperty()
-{% else %}
-    {{prop.name}} = RelationshipTo({{ python_type(prop.definition or None, relative_to=model) }}, 'BELONGS_TO')
-{% endif %}
 {% endfor %}
 {% endif %}
 

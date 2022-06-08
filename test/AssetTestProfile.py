@@ -1,3 +1,4 @@
+from neomodel import config, StructuredNode, ArrayProperty, StringProperty, IntegerProperty, UniqueIdProperty, RelationshipTo
 from reprlib import repr as limitedRepr
 
 
@@ -5,10 +6,11 @@ import enum
 
 
 
-class ProductAssetModel:
+class ProductAssetModel(StructuredNode):
     """
     Asset model by a specific manufacturer.
     """
+
 
 
 
@@ -31,12 +33,15 @@ class ProductAssetModel:
     def __repr__(self):
         return "<Class ProductAssetModel. >".format()
 
-class ProcedureRef:
+class ProcedureRef(StructuredNode):
     """
     All procedures applicable to this asset.
     """
 
 
+
+    ref = StringProperty()
+    referenceType = StringProperty()
 
     _types_map = {
         'ref': {'type': str, 'subtype': None},
@@ -95,12 +100,15 @@ class ProcedureRef:
     def __repr__(self):
         return "<Class ProcedureRef. ref: {}, referenceType: {}>".format(limitedRepr(self.__ref[:20] if isinstance(self.__ref, bytes) else self.__ref), limitedRepr(self.__referenceType[:20] if isinstance(self.__referenceType, bytes) else self.__referenceType))
 
-class ProcedureDataSetRef:
+class ProcedureDataSetRef(StructuredNode):
     """
     Procedure data set that applies to this asset.
     """
 
 
+
+    ref = StringProperty()
+    referenceType = StringProperty()
 
     _types_map = {
         'ref': {'type': str, 'subtype': None},
@@ -159,12 +167,15 @@ class ProcedureDataSetRef:
     def __repr__(self):
         return "<Class ProcedureDataSetRef. ref: {}, referenceType: {}>".format(limitedRepr(self.__ref[:20] if isinstance(self.__ref, bytes) else self.__ref), limitedRepr(self.__referenceType[:20] if isinstance(self.__referenceType, bytes) else self.__referenceType))
 
-class NameRef:
+class NameRef(StructuredNode):
     """
     All names of this identified object.
     """
 
 
+
+    ref = StringProperty()
+    referenceType = StringProperty()
 
     _types_map = {
         'ref': {'type': str, 'subtype': None},
@@ -223,12 +234,15 @@ class NameRef:
     def __repr__(self):
         return "<Class NameRef. ref: {}, referenceType: {}>".format(limitedRepr(self.__ref[:20] if isinstance(self.__ref, bytes) else self.__ref), limitedRepr(self.__referenceType[:20] if isinstance(self.__referenceType, bytes) else self.__referenceType))
 
-class MeasurementRef:
+class MeasurementRef(StructuredNode):
     """
     Measurement related to this asset.
     """
 
 
+
+    ref = StringProperty()
+    referenceType = StringProperty()
 
     _types_map = {
         'ref': {'type': str, 'subtype': None},
@@ -287,12 +301,15 @@ class MeasurementRef:
     def __repr__(self):
         return "<Class MeasurementRef. ref: {}, referenceType: {}>".format(limitedRepr(self.__ref[:20] if isinstance(self.__ref, bytes) else self.__ref), limitedRepr(self.__referenceType[:20] if isinstance(self.__referenceType, bytes) else self.__referenceType))
 
-class LocationRef:
+class LocationRef(StructuredNode):
     """
     Location of this asset.
     """
 
 
+
+    ref = StringProperty()
+    referenceType = StringProperty()
 
     _types_map = {
         'ref': {'type': str, 'subtype': None},
@@ -369,6 +386,7 @@ class AssetKind(enum.Enum):
     transformerTank = "transformerTank"
 
 
+
     
 
     @staticmethod
@@ -382,12 +400,14 @@ class AssetKind(enum.Enum):
     def __repr__(self):
         return "<Enum AssetKind. {}: {}>".format(limitedRepr(self.name), limitedRepr(self.value))
 
-class AssetInfo:
+class AssetInfo(StructuredNode):
     """
     Set of attributes of an asset, representing typical datasheet information of a physical device that can be instantiated and shared in different data exchange contexts: - as attributes of an asset instance (installed or in stock) - as attributes of an asset model (product by a manufacturer) - as attributes of a type asset (generic type of an asset as used in designs/extension planning).
     """
 
 
+
+    ProductAssetModel = RelationshipTo(ProductAssetModel)
 
     _types_map = {
         'ProductAssetModel': {'type': ProductAssetModel, 'subtype': None},
@@ -436,10 +456,11 @@ class AssetInfo:
     def __repr__(self):
         return "<Class AssetInfo. ProductAssetModel: {}>".format(limitedRepr(self.__ProductAssetModel[:20] if isinstance(self.__ProductAssetModel, bytes) else self.__ProductAssetModel))
 
-class AssetDeployment:
+class AssetDeployment(StructuredNode):
     """
     Deployment of asset deployment in a power system resource role.
     """
+
 
 
 
@@ -462,12 +483,24 @@ class AssetDeployment:
     def __repr__(self):
         return "<Class AssetDeployment. >".format()
 
-class Asset:
+class Asset(StructuredNode):
     """
     Tangible resource of the utility, including power system equipment, various end devices, cabinets, buildings, etc. For electrical network equipment, the role of the asset is defined through PowerSystemResource and its subclasses, defined mainly in the Wires model (refer to IEC61970-301 and model package IEC61970::Wires). Asset description places emphasis on the physical characteristics of the equipment fulfilling that role.
     """
 
 
+
+    mRID = StringProperty()
+    description = StringProperty()
+    kind = RelationshipTo(AssetKind)
+    serialNumber = StringProperty()
+    AssetDeployment = RelationshipTo(AssetDeployment)
+    AssetInfo = RelationshipTo(AssetInfo)
+    Location = RelationshipTo(LocationRef)
+    Measurements = ArrayProperty()
+    Names = ArrayProperty()
+    ProcedureDataSet = ArrayProperty()
+    Procedures = ArrayProperty()
 
     _types_map = {
         'mRID': {'type': str, 'subtype': None},
@@ -724,12 +757,14 @@ class Asset:
     def __repr__(self):
         return "<Class Asset. mRID: {}, description: {}, kind: {}, serialNumber: {}, AssetDeployment: {}, AssetInfo: {}, Location: {}, Measurements: {}, Names: {}, ProcedureDataSet: {}, Procedures: {}>".format(limitedRepr(self.__mRID[:20] if isinstance(self.__mRID, bytes) else self.__mRID), limitedRepr(self.__description[:20] if isinstance(self.__description, bytes) else self.__description), limitedRepr(self.__kind[:20] if isinstance(self.__kind, bytes) else self.__kind), limitedRepr(self.__serialNumber[:20] if isinstance(self.__serialNumber, bytes) else self.__serialNumber), limitedRepr(self.__AssetDeployment[:20] if isinstance(self.__AssetDeployment, bytes) else self.__AssetDeployment), limitedRepr(self.__AssetInfo[:20] if isinstance(self.__AssetInfo, bytes) else self.__AssetInfo), limitedRepr(self.__Location[:20] if isinstance(self.__Location, bytes) else self.__Location), limitedRepr(self.__Measurements[:20] if isinstance(self.__Measurements, bytes) else self.__Measurements), limitedRepr(self.__Names[:20] if isinstance(self.__Names, bytes) else self.__Names), limitedRepr(self.__ProcedureDataSet[:20] if isinstance(self.__ProcedureDataSet, bytes) else self.__ProcedureDataSet), limitedRepr(self.__Procedures[:20] if isinstance(self.__Procedures, bytes) else self.__Procedures))
 
-class Breaker:
+class Breaker(StructuredNode):
     """
     A mechanical switching device capable of making, carrying, and breaking currents under normal circuit conditions and also making, carrying for a specified time, and breaking currents under specified abnormal circuit conditions e.g. those of short circuit.
     """
 
 
+
+    Assets = ArrayProperty()
 
     _types_map = {
         'Assets': {'type': list, 'subtype': Asset},
@@ -780,10 +815,11 @@ class Breaker:
     def __repr__(self):
         return "<Class Breaker. Assets: {}>".format(limitedRepr(self.__Assets[:20] if isinstance(self.__Assets, bytes) else self.__Assets))
 
-class AssetModelCatalogueItem:
+class AssetModelCatalogueItem(StructuredNode):
     """
     Provides pricing and other relevant information about a specific manufacturer's product (i.e., AssetModel), and its price from a given supplier. A single AssetModel may be availble from multiple suppliers. Note that manufacturer and supplier are both types of organisation, which the association is inherited from Document.
     """
+
 
 
 
@@ -806,9 +842,13 @@ class AssetModelCatalogueItem:
     def __repr__(self):
         return "<Class AssetModelCatalogueItem. >".format()
 
-class Profile:
+class Profile(StructuredNode):
 
 
+
+    Asset = ArrayProperty()
+    AssetInfo = ArrayProperty()
+    Breaker = ArrayProperty()
 
     _types_map = {
         'Asset': {'type': list, 'subtype': Asset},
