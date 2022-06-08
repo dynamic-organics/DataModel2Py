@@ -3,9 +3,9 @@ import os
 import pathlib
 from typing import Union, Dict, Callable, Any
 
-from jsonschema2popo import version
-from jsonschema2popo.classes import Definition, ListNode, CodeGenPlugin
-from jsonschema2popo.jsonschema2popo import string_to_type
+from jsonschema2py import version
+from jsonschema2py.classes import Definition, ListNode, CodeGenPlugin
+from jsonschema2py.jsonschema2py import string_to_type
 
 
 class Python(CodeGenPlugin):

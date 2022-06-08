@@ -2,9 +2,9 @@ import argparse
 import os
 from typing import Dict, Callable, Any
 
-from jsonschema2popo import version
-from jsonschema2popo.classes import CodeGenPlugin
-from jsonschema2popo.python.python import Python
+from jsonschema2py import version
+from jsonschema2py.classes import CodeGenPlugin
+from jsonschema2py.python.python import Python
 
 
 class Go(CodeGenPlugin):

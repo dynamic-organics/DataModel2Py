@@ -10,10 +10,10 @@ from types import ModuleType
 import mypy.main
 from mypy.fscache import FileSystemCache
 
-from jsonschema2popo import jsonschema2popo
-from jsonschema2popo.go.go import Go
-from jsonschema2popo.js.js import JS
-from jsonschema2popo.python.python import Python
+from jsonschema2py import jsonschema2py
+from jsonschema2py.go.go import Go
+from jsonschema2py.js.js import JS
+from jsonschema2py.python.python import Python
 
 DEFINITIONS_BASIC_GENERATION = """{
             "definitions": {
@@ -51,7 +51,7 @@ def import_file(file_path: str) -> ModuleType:
     return foo
 
 
-class JsonSchema2Popo(unittest.TestCase):
+class jsonschema2py(unittest.TestCase):
     def tearDown(self):
         try:
             self.mypy_test()
@@ -123,7 +123,7 @@ class JsonSchema2Popo(unittest.TestCase):
             pass
         self.test_file_go = f"generated/{self.id()}.go"
 
-        loader = jsonschema2popo.JsonSchema2Popo(
+        loader = jsonschema2py.JsonSchema2Py(
             language="python",
             **kwargs,
         )
@@ -138,7 +138,7 @@ class JsonSchema2Popo(unittest.TestCase):
         loader.write_file(self.test_file)
         Python.format_python_file(self.test_file)
 
-        loader = jsonschema2popo.JsonSchema2Popo(
+        loader = jsonschema2py.JsonSchema2Py(
             language="js",
             **kwargs,
         )
@@ -147,7 +147,7 @@ class JsonSchema2Popo(unittest.TestCase):
         loader.write_file(self.test_file_js)
         JS.format_js_file(self.test_file_js)
 
-        loader = jsonschema2popo.JsonSchema2Popo(
+        loader = jsonschema2py.JsonSchema2Py(
             language="go",
             **kwargs,
         )

@@ -12,7 +12,7 @@ from typing import List, Optional, Dict, Set
 import networkx
 from jinja2 import Environment, FileSystemLoader
 
-from jsonschema2popo.classes import (
+from jsonschema2py.classes import (
     Definition,
     ReferenceNode,
     EnumNode,
@@ -47,7 +47,7 @@ def string_to_type(t: str) -> str:
     return J2P_TYPES[t].__name__ if t in J2P_TYPES else t
 
 
-class JsonSchema2Popo:
+class JsonSchema2Py:
     """Converts a JSON Schema to a Plain Old Python Object class"""
 
     J2P_TYPES = {
@@ -64,7 +64,7 @@ class JsonSchema2Popo:
     def flatten(something):
         if isinstance(something, (list, tuple, set, range)):
             for sub in something:
-                yield from JsonSchema2Popo.flatten(sub)
+                yield from JsonSchema2Py.flatten(sub)
         else:
             yield something
 
@@ -80,7 +80,7 @@ class JsonSchema2Popo:
         self.enum_used = False
 
         if language == "python" or language == "js" or language == "go":
-            self.module = importlib.import_module("." + language, "jsonschema2popo")
+            self.module = importlib.import_module("." + language, "jsonschema2py")
         # Try importing from a specified file path
         elif os.path.exists(language):
             spec = importlib.util.spec_from_file_location("", language)
@@ -156,7 +156,12 @@ class JsonSchema2Popo:
             g = networkx.DiGraph()
             models_map = {}
             for model in self.definitions:
-                models_map[model.full_name_path] = model
+                # models_map[model.full_name_path] = model
+                try:
+                    models_map[model.full_name_path] = model
+                except Exception as ex:
+                    print(ex)
+                    continue
                 deps = self.get_model_dependencies(model)
                 if not deps:
                     g.add_edge(model.full_name_path, "")
@@ -513,7 +518,7 @@ def main():
 
     args = parser.parse_known_args(args=rewritten_args)[0]
 
-    loader = JsonSchema2Popo(
+    loader = JsonSchema2Py(
         language=args.language,
         custom_template=args.custom_template,
     )

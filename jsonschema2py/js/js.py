@@ -2,10 +2,10 @@ import argparse
 import os
 from typing import Union, Dict, Callable, Any
 
-from jsonschema2popo import version
-from jsonschema2popo.classes import Definition, ListNode, ReferenceNode, CodeGenPlugin
-from jsonschema2popo.jsonschema2popo import string_to_type
-from jsonschema2popo.python.python import Python
+from jsonschema2py import version
+from jsonschema2py.classes import Definition, ListNode, ReferenceNode, CodeGenPlugin
+from jsonschema2py.jsonschema2py import string_to_type
+from jsonschema2py.python.python import Python
 
 
 class JS(CodeGenPlugin):

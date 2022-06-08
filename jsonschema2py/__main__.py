@@ -7,7 +7,7 @@ if __package__ == "":
     path = os.path.dirname(os.path.dirname(__file__))
     sys.path.insert(0, path)
 
-from jsonschema2popo.jsonschema2popo import main as _main  # noqa
+from jsonschema2py.jsonschema2py import main as _main  # noqa
 
 if __name__ == "__main__":
     # Reset argv[0] so that argparse will see this as the program name

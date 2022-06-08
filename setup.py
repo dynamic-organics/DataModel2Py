@@ -21,7 +21,7 @@ def find_version(*file_paths):
 
 setup(
     name="JSONSchema2PoPo2",
-    version=find_version("jsonschema2popo", "__init__.py"),
+    version=find_version("jsonschema2py", "__init__.py"),
     description="Converts a JSON Schema to a Plain Old Python Object class",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
@@ -47,10 +47,10 @@ setup(
     python_requires=">=3.4",
     install_requires=["Jinja2>=2.11.3", "networkx==2.4"],
     extras_require={"Format JS": ["jsbeautifier"], "Format Python": ["black"]},
-    packages=["jsonschema2popo"],
-    package_data={"jsonschema2popo": ["*/*"]},
+    packages=["jsonschema2py"],
+    package_data={"jsonschema2py": ["*/*"]},
     include_package_data=True,
     entry_points={
-        "console_scripts": ["jsonschema2popo2=jsonschema2popo.jsonschema2popo:main"]
+        "console_scripts": ["jsonschema2popo2=jsonschema2py.jsonschema2py:main"]
     },
 )
