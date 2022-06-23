@@ -182,6 +182,11 @@ class EnumNode(Definition):
         self.name = name
         self.values = values
 
+    # @property
+    # def default(self):
+    #     print('EnumNode default')
+    #     return 'Tim'
+
 
 class NumericNode(Definition):
     type = "number"

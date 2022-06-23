@@ -411,12 +411,14 @@ class JsonSchema2Py:
 
     def write_file(self, filename):
         template = self.custom_template or self.module.template()
-        self.jinja.get_template(template).stream(
+        template_impl = self.jinja.get_template(template)
+        template_stream = template_impl.stream(
             models=self.definitions,
             enum_used=self.enum_used,
             list_used=self.list_used,
             **self.module.extra_jinja_inputs()
-        ).dump(filename)
+        )
+        template_stream.dump(filename)
         if hasattr(filename, "close"):
             filename.close()
 

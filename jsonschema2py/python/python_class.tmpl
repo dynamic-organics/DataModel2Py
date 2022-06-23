@@ -80,7 +80,7 @@ class {{model.python_type_name}}{% if model.type == "enum" %}(enum.Enum){% elif 
             , *args
 {% endif %}
 {% for prop in model.properties %}
-            , {{trn(prop.name)}}{% if use_types %}: {{ get_typing(prop, relativeTo=model) }}{% endif %}={% if prop.definition.string_type == "string" and prop.default is not none %}'{{prop.default}}'{% else %}{{prop.default}}{% endif %}
+            , {{trn(prop.name)}}{% if use_types %}: {{ get_typing(prop, relativeTo=model) }}{% endif %}={% if prop.definition.string_type == "enum" %}'{{prop.python_type_name}}'{% elif prop.definition.string_type == "string" and prop.default is not none %}'{{prop.default}}'{% else %}{{prop.default}}{% endif %}
 {% endfor %}
 {% if model.extends %}
             , **kwargs
@@ -98,7 +98,6 @@ class {{model.python_type_name}}{% if model.type == "enum" %}(enum.Enum){% elif 
 {% if model.extends %}
         super().__init__(*args, **kwargs)
 {% endif %}
-        pass
 {% if constructor_type_check %}
 {% for prop in model.properties %}
         {{ type_check(prop, relativeTo=model)|indent(8) }}
@@ -107,6 +106,7 @@ class {{model.python_type_name}}{% if model.type == "enum" %}(enum.Enum){% elif 
 {% for prop in model.properties %}
         self.__{{trn(prop.name)}} = {{trn(prop.name)}}
 {% endfor %}
+        pass
 {% endif %}
     
 {% for prop in model.properties %}

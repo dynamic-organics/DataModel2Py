@@ -1,0 +1,30 @@
+{# Only base class needs to inherit from StructuredNode #}
+
+from neomodel import config, StructuredNode, ArrayProperty, StringProperty, FloatProperty, IntegerProperty, BooleanProperty, DateTimeProperty, UniqueIdProperty, RelationshipTo
+{% for import in imports %}
+{{ import }}
+{% endfor %}
+
+class {{ name }}({{base_class}}):
+{% if properties|length == 0 %}
+    pass
+{% endif %}
+{% for property in properties %}
+{% if property.type == 'str' %}
+    {{property.name}} = StringProperty()
+{% elif property.type == 'int' %}
+    {{property.name}} = IntegerProperty()
+{% elif property.type == 'float' %}
+    {{property.name}} = FloatProperty()
+{% elif property.type == 'bool' %}
+    {{property.name}} = BooleanProperty()
+{% elif property.type == 'duration' %}
+    {{property.name}} = DateTimeProperty()
+{% elif property.type == 'datetime' %}
+    {{property.name}} = DateTimeProperty()
+{% elif property.type == 'list' %}
+    {{property.name}} = ArrayProperty()
+{% else %}
+    {{property.name}} = RelationshipTo({{ property.type }}, 'BELONGS_TO')
+{% endif %}
+{% endfor %}
